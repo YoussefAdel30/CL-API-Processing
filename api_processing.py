@@ -64,62 +64,35 @@ def main(msisdn_api, values_file, mapper_csv, log_file):
         lac_dec = ""
         site_id = ""
 
-        # Check if site field is directly provided in the response (new response types)
-        if "site" in rec and rec["site"]:
-            site_id = rec["site"]
-            # For new types (TAU, Attach, HO, 2/3G_Signal), extract hex values if cell exists
-            if cell and len(cell) > 5:
-                if ctype == "EPC" or ctype in ["TAU", "Attach", "HO"]:
-                    # For EPC-like types, remove first 5 chars, everything else is CID
-                    cid_hex = cell[5:]
-                    try:
-                        cid_dec = str(hex_to_dec(cid_hex))
-                    except:
-                        cid_dec = ""
-                else:
-                    # For 2/3G types, remove first 5 chars, split LAC and CID
-                    hex_part = cell[5:]
-                    if len(hex_part) >= 8:
-                        lac_hex = hex_part[:4]
-                        cid_hex = hex_part[4:8]
-                        try:
-                            lac_dec = str(hex_to_dec(lac_hex))
-                        except:
-                            lac_dec = ""
-                        try:
-                            cid_dec = str(hex_to_dec(cid_hex))
-                        except:
-                            cid_dec = ""
+        # Handle EPC-like types (EPC, TAU, Attach, HO) - same method
+        if ctype in ["EPC", "TAU", "Attach", "HO"]:
+            # For EPC-like types, remove first 5 chars, everything else is CID
+            cid_hex = cell[5:]
+            try:
+                cid_dec = str(hex_to_dec(cid_hex))
+            except:
+                cid_dec = ""
+            # Find SITE_ID and LAC from mapper using CID
+            for (lac, cid), site in mapper.items():
+                if cid == cid_dec:
+                    site_id = site
+                    lac_dec = lac
+                    break
         else:
-            # Fall back to mapper lookup (old response types)
-            if ctype == "EPC":
-                # For EPC, remove first 5 chars, everything else is CID
-                cid_hex = cell[5:]
+            # For 2/3G types (including 2/3G_Signal), remove first 5 chars, split LAC and CID  2C75 = 11381 B67B = 46715
+            hex_part = cell[5:]
+            if len(hex_part) >= 8:
+                lac_hex = hex_part[:4]
+                cid_hex = hex_part[4:8]
+                try:
+                    lac_dec = str(hex_to_dec(lac_hex))
+                except:
+                    lac_dec = ""
                 try:
                     cid_dec = str(hex_to_dec(cid_hex))
                 except:
                     cid_dec = ""
-                # Find SITE_ID and LAC from mapper using CID
-                for (lac, cid), site in mapper.items():
-                    if cid == cid_dec:
-                        site_id = site
-                        lac_dec = lac
-                        break
-            else:
-                # For 2/3G, remove first 5 chars, split LAC and CID  2C75 = 11381 B67B = 46715
-                hex_part = cell[5:]
-                if len(hex_part) >= 8:
-                    lac_hex = hex_part[:4]
-                    cid_hex = hex_part[4:8]
-                    try:
-                        lac_dec = str(hex_to_dec(lac_hex))
-                    except:
-                        lac_dec = ""
-                    try:
-                        cid_dec = str(hex_to_dec(cid_hex))
-                    except:
-                        cid_dec = ""
-                    site_id = mapper.get((lac_dec, cid_dec), "")
+                site_id = mapper.get((lac_dec, cid_dec), "")
 
         if site_id:
             # Each API record becomes one row in the file
