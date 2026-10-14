@@ -1,0 +1,41 @@
+{
+    "status": "success",
+    "message": "Success",
+    "msisdn": "'1xxxxxxxxx','1xxxxxxxxx','1xxxxxxxxx'",
+    "count": 3,
+    "data": [
+        {
+            "proc_starttime": "2026-10-14T05:50:20Z",
+            "imsi": "602022236687829",
+            "msisdn": "1xxxxxxxxx",
+            "imei": "3xxxxxxxxxxxxxx",
+            "cell": "6020229E4D03",
+            "type": "TAU",
+            "Mobile_Stat": "",
+            "site": "1597"
+        },
+        {
+            "proc_starttime": "2026-10-14T06:18:38Z",
+            "imsi": "602023121188899",
+            "msisdn": "1xxxxxxxxx",
+            "imei": "3xxxxxxxxxxxxxx",
+            "cell": "602024A9CF07",
+            "type": "Attach",
+            "Mobile_Stat": "",
+            "site": "5615"
+        },
+        {
+            "proc_starttime": "2026-10-14T09:51:18Z",
+            "imsi": "602022216132573",
+            "msisdn": "1xxxxxxxxx",
+            "imei": "3xxxxxxxxxxxxxx",
+            "cell": "602021874401",
+            "type": "HO",
+            "Mobile_Stat": "",
+            "site": "0164"
+        }
+    ]
+}
+
+
+2026-10-14 13:36:33 - API response (truncated) for MSISDN 1xxxxxxxxx: {"status":"success","message":"Success","msisdn":"'1044720133'","count":1,"data":[{"proc_starttime":"2026-10-14T04:43:10+03:00","imsi":"602023415556177","msisdn":"1044720133","imei":"350807995410226","cell":"6020279A675D6","type":"2/3G_Signal","Mobile_Stat":"","site":"J0790"}]}
